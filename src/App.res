@@ -22,12 +22,23 @@ let make = () => {
     let _ = request()
     None
   }, [])
-  
+
   <div className="max-w-200">
-    {
-      facts->Array.map(fact =>
-        <span>{fact->React.string}</span> 
-      )->React.array
-    }
+    <h1>{"Dog Facts"->React.string}</h1>
+    <ul>
+      {facts->Array.map(fact =>
+        <li key={fact}>
+          {fact->React.string}
+        </li>
+      )->React.array}
+    </ul>
+    
+    <hr />
+    
+    <button onClick={_ => {
+      let _ = RescriptReactRouter.push("/affichage-bdd")
+    }}>
+      {"Voir les questions"->React.string}
+    </button>
   </div>
 }
