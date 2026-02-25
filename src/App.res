@@ -1,7 +1,6 @@
 
 @react.component
 let make = () => {
- page_acceuil
   <div >
    <header className = "header-1">
     <h1 className = "large-title"> {React.string("Page d'acceuil")} </h1>
@@ -11,7 +10,7 @@ let make = () => {
       <p className = "paragraph-1"> {React.string("Bienvenue sur votre questionnaire")}</p>
       <input className = "input-1" type_="text" placeholder="Entrez votre nom"/>
       <button className = "button-1" onClick={_ => {
-        %raw(`window.location.href = "about:blank"`)
+        let _ = RescriptReactRouter.push("/affichage-bdd")
       }} > {React.string("Commencer le questionnaire")} </button>
   </div>
   </div>
