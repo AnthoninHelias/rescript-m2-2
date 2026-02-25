@@ -10,9 +10,10 @@ let make = () => {
       <img className = "image-1" src="image-2.png" alt="Image d'acceuil" />
       <p className = "paragraph-1"> {React.string("Bienvenue sur votre questionnaire")}</p>
       <input className = "input-1" type_="text" placeholder="Entrez votre nom"/>
-      <button className = "button-1" onClick={_ => {
-        %raw(`window.location.href = "about:blank"`)
-      }} > {React.string("Commencer le questionnaire")} </button>
+      <button className = "button-1" onClick={ => {
+            let  = RescriptReactRouter.push("/affichage-bdd")}}>
+            {React.string("Commencer le questionnaire")}
+      </button>
   </div>
   </div>
 }
