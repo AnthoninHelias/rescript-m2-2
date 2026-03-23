@@ -17,15 +17,20 @@
   --line-height-40xl: 1;
 }
 
-body{
-  background-color: #ffffff;
+body {
+  background: linear-gradient(135deg, #1e1b4b 0%, #5b21b6 60%, #7c3aed 100%);
+  min-height: 100vh;
+  color: white;
 }
 .large-title {
-  @apply text-3xl font-mono;
+  @apply text-3xl font-mono text-white;
 }
 
 .header-1 {
-  @apply bg-violet-400 flex items-center justify-center;
+  @apply flex items-center justify-center;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   position: fixed;
   top: 0;
   left: 0;
@@ -38,6 +43,8 @@ body{
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding-top: 90px;
+  min-height: 100vh;
 }
 
 .image-1 {
@@ -45,13 +52,25 @@ body{
 }
 
 .paragraph-1 {
-  @apply font-mono font-bold;
+  @apply font-mono font-bold text-white;
   margin-top: 10px;
 }
 
 .input-1 {
-  @apply border border-black rounded px-2 py-1 mt-4;
+  @apply rounded-lg px-4 py-2 mt-4 text-white focus:outline-none focus:ring-2 focus:ring-violet-400;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  width: 280px;
+}
+.input-1::placeholder {
+  color: rgba(255, 255, 255, 0.4);
 }
 .button-1 {
-  @apply  bg-white shadow-gray-500 shadow-lg rounded-full  px-4 py-2 mt-4;
+  @apply bg-violet-500 hover:bg-violet-600 text-white shadow-lg rounded-full px-6 py-2 mt-4 font-semibold transition-colors cursor-pointer;
+}
+
+.max-w-200 {
+  max-width: 450px;
+  font-size: 30px;
+
 }

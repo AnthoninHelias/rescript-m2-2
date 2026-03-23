@@ -1,2 +1,2 @@
 @react.component
-let make: unit => Jsx.element
+let make: (~nom: string, ~setNom: (string => string) => unit) => Jsx.element
