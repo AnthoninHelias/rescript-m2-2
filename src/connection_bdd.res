@@ -1,11 +1,15 @@
 // ─── Bindings axios ─────────────────────────────────────────────────────────
 // Axios est la bibliothèque JavaScript utilisée pour faire des requêtes HTTP.
 // On déclare ici ses types et on l'importe depuis le paquet npm "axios".
-type axiosResponse<'a> = {data: 'a}
+type axiosResponse<'a> = {
+  data: 'a,
+  status: int,
+}
 
 type axios
 @module("axios") external axios: axios = "default"
 @send external get: (axios, string) => promise<axiosResponse<'a>> = "get"
+@send external post: (axios, string, 'a) => promise<axiosResponse<'a>> = "post"
 
 // ─── Types de données ────────────────────────────────────────────────────────
 // Représente une ligne de résultat renvoyée par l'API pour une question
@@ -63,6 +67,34 @@ let fetchResponsesByQuestionId = async (id: int): array<reponse> => {
   | _ => {
       Console.error("Error fetching responses")
       []
+    }
+  }
+}
+
+type loginPayload = {
+  pseudo: string,
+  mot_de_passe: string,
+}
+
+// Vérifie les informations de connexion.
+// Retourne true si réussi, false sinon.
+let login = async (pseudo: string, password: string) => {
+  try {
+    if false {
+      let response = await axios->get(`${apiBaseUrl}/login/${pseudo}/${password}`)
+      response.status == 200
+    } else {
+      let payload = {
+        pseudo,
+        mot_de_passe: password,
+      }
+      let response = await axios->post(`${apiBaseUrl}/utilisateurs/login`, payload)
+      response.status == 200
+    }
+  } catch {
+  | _ => {
+      Console.error("Error logging in")
+      false
     }
   }
 }
