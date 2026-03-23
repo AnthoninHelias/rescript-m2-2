@@ -15,8 +15,10 @@ module Router = {
     switch url.path {
     // Route "/affichage-bdd" → page du questionnaire (démarre à la question 1)
     | list{"affichage-bdd"} => <Affichage_bdd questionId={1} nom={nom} setNom={setNom} />
-    // Toute autre route → page d'accueil
-    | _ => <App nom={nom} setNom={setNom} />
+    // Route "/app" → page du questionnaire
+    | list{"app"} => <App nom={nom} setNom={setNom} />
+    // Toute autre route → page de connexion
+    | _ => <Page_connexion nom={nom} setNom={setNom} />
     }
   }
 }

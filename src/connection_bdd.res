@@ -27,7 +27,7 @@ type reponse = {
   correct: bool,
 }
 
-// URL de base de l'API — centralisée ici pour éviter la répétition
+// URL de base de l'API (Heroku par défaut)
 let apiBaseUrl = "https://qcm-api-a108ec633b51.herokuapp.com"
 
 // Récupère le texte d'une question à partir de son identifiant.
