@@ -71,30 +71,13 @@ let fetchResponsesByQuestionId = async (id: int): array<reponse> => {
   }
 }
 
-type loginPayload = {
-  pseudo: string,
-  mot_de_passe: string,
-}
-
-// Vérifie les informations de connexion.
-// Retourne true si réussi, false sinon.
-let login = async (pseudo: string, password: string) => {
-  try {
-    if false {
-      let response = await axios->get(`${apiBaseUrl}/login/${pseudo}/${password}`)
-      response.status == 200
-    } else {
-      let payload = {
-        pseudo,
-        mot_de_passe: password,
-      }
-      let response = await axios->post(`${apiBaseUrl}/utilisateurs/login`, payload)
-      response.status == 200
+// Vérifie si l'utilisateur est connecté (token valide)
+let isLoggedIn = () => {
+  switch Dom.Storage.getItem("auth_expires") {
+  | Some(expStr) => {
+      let exp = Float.fromString(expStr)->Option.getWithDefault(0.0)
+      exp > Js.Date.now()
     }
-  } catch {
-  | _ => {
-      Console.error("Error logging in")
-      false
-    }
+  | None => false
   }
 }
