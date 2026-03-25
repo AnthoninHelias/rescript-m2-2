@@ -1,11 +1,15 @@
 // ─── Bindings axios ─────────────────────────────────────────────────────────
 // Axios est la bibliothèque JavaScript utilisée pour faire des requêtes HTTP.
 // On déclare ici ses types et on l'importe depuis le paquet npm "axios".
-type axiosResponse<'a> = {data: 'a}
+type axiosResponse<'a> = {
+  data: 'a,
+  status: int,
+}
 
 type axios
 @module("axios") external axios: axios = "default"
 @send external get: (axios, string) => promise<axiosResponse<'a>> = "get"
+@send external post: (axios, string, 'a) => promise<axiosResponse<'a>> = "post"
 
 // ─── Types de données ────────────────────────────────────────────────────────
 // Représente une ligne de résultat renvoyée par l'API pour une question
@@ -27,7 +31,7 @@ type reponse = {
   correct: bool,
 }
 
-// URL de base de l'API — centralisée ici pour éviter la répétition
+// URL de base de l'API (Heroku par défaut)
 let apiBaseUrl = "https://qcm-api-a108ec633b51.herokuapp.com"
 
 // Récupère le texte d'une question à partir de son identifiant.
@@ -64,5 +68,16 @@ let fetchResponsesByQuestionId = async (id: int): array<reponse> => {
       Console.error("Error fetching responses")
       []
     }
+  }
+}
+
+// Vérifie si l'utilisateur est connecté (token valide)
+let isLoggedIn = () => {
+  switch Dom.Storage.getItem("auth_expires") {
+  | Some(expStr) => {
+      let exp = Float.fromString(expStr)->Option.getWithDefault(0.0)
+      exp > Js.Date.now()
+    }
+  | None => false
   }
 }
