@@ -2,16 +2,15 @@ open Connection_bdd
 
 // Binding axios minimal
 type axios
-@react.component
 @module("axios") external axios: axios = "default"
 @send external get: (axios, string) => promise<axiosResponse<'a>> = "get"
 
 // Génère et stocke un token d'authentification (2 minutes)
 let generateToken = () => {
   let token = "token_" ++ Int.toString(Js.Math.random_int(0, 1000000))
-  let expires = Js.Date.now() +. 120000.0
-  Dom.Storage.setItem("auth_token", token)
-  Dom.Storage.setItem("auth_expires", Float.toString(expires))
+  let expires = Date.now() +. 120000.0
+  Dom.Storage.setItem("auth_token", token, Dom.Storage.localStorage)
+  Dom.Storage.setItem("auth_expires", Float.toString(expires), Dom.Storage.localStorage)
   token
 }
 
@@ -40,6 +39,7 @@ let handleInputChange = (setter: (string => string) => unit, e: ReactEvent.Form.
 }
 
 
+@react.component
 let make = (~nom: string, ~setNom: (string => string) => unit) => {
   let (password, setPassword) = React.useState(() => "")
   let (errorMessage, setErrorMessage) = React.useState(() => "")

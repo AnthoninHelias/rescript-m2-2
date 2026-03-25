@@ -24,7 +24,7 @@ let make = (~questionId: int, ~nom: string, ~setNom: (string => string) => unit)
   let (isStarted, setIsStarted) = React.useState(() => nom->String.trim !== "")
 
   // Nombre total de questions pour cette session (tiré aléatoirement entre 3 et 5)
-  let (totalQuestions, _) = React.useState(() => 3 + Js.Math.floor_int(Js.Math.random() *. 3.0))
+  let (totalQuestions, _) = React.useState(() => 3 + Js.Math.floor_int(Math.random() *. 3.0))
   // Numéro de la question en cours (1-basé, affiché à l'utilisateur)
   let (questionNumber, setQuestionNumber) = React.useState(() => 1)
 

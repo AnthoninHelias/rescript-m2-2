@@ -73,10 +73,10 @@ let fetchResponsesByQuestionId = async (id: int): array<reponse> => {
 
 // Vérifie si l'utilisateur est connecté (token valide)
 let isLoggedIn = () => {
-  switch Dom.Storage.getItem("auth_expires") {
+  switch Dom.Storage.getItem("auth_expires", Dom.Storage.localStorage) {
   | Some(expStr) => {
-      let exp = Float.fromString(expStr)->Option.getWithDefault(0.0)
-      exp > Js.Date.now()
+      let exp = Float.fromString(expStr)->Option.getOr(0.0)
+      exp > Date.now()
     }
   | None => false
   }
