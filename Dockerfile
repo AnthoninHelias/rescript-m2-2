@@ -22,11 +22,14 @@ FROM nginx:stable-alpine
 # Copier les fichiers buildés
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Configuration nginx : redirige toutes les routes vers index.html (SPA)
+# Configuration nginx : proxy /api/ vers le backend, SPA fallback pour le reste
 RUN printf 'server {\n\
     listen 80;\n\
     root /usr/share/nginx/html;\n\
     index index.html;\n\
+    location /api/ {\n\
+        proxy_pass http://backend:3000/;\n\
+    }\n\
     location / {\n\
         try_files $uri $uri/ /index.html;\n\
     }\n\

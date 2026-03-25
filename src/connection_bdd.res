@@ -31,8 +31,8 @@ type reponse = {
   correct: bool,
 }
 
-// URL de base de l'API (Heroku par défaut)
-let apiBaseUrl = "https://qcm-api-a108ec633b51.herokuapp.com"
+// URL de base de l'API (proxied via nginx → backend container)
+let apiBaseUrl = "/api"
 
 // Récupère le texte d'une question à partir de son identifiant.
 // Retourne Some(texte) si trouvée, None si absente ou en cas d'erreur réseau.
