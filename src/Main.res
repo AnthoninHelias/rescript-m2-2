@@ -10,7 +10,17 @@
   })
 `)
 
-open Connection_bdd
+// Composant de redirection : effectue la navigation dans un effet (pas pendant le rendu)
+module Redirect = {
+  @react.component
+  let make = (~to_: string, ~nom: string, ~setNom: (string => string) => unit) => {
+    React.useEffect0(() => {
+      RescriptReactRouter.replace(to_)
+      None
+    })
+    <Page_connexion nom={nom} setNom={setNom} />
+  }
+}
 
 // Module routeur : décide quel composant afficher selon l'URL courante
 module Router = {
@@ -27,24 +37,27 @@ module Router = {
 
     // Aiguillage selon le chemin de l'URL
     switch url.path {
-    // Route "/affichage-bdd" → page du questionnaire (démarre à la question 1)
-    | list{"affichage-bdd"} => 
+    // Route "/questions" → page du questionnaire (démarre à la question 1)
+    | list{"questions"} =>
       if isLoggedIn {
         <Affichage_bdd questionId={1} nom={nom} setNom={setNom} />
       } else {
-        RescriptReactRouter.replace("/")
-        <Page_connexion nom={nom} setNom={setNom} />
+        <Redirect to_="/connexion" nom={nom} setNom={setNom} />
       }
-    // Route "/app" → page du questionnaire
-    | list{"app"} => 
+    // Route "/accueil" → page de l'accueil
+    | list{"accueil"} =>
       if isLoggedIn {
         <App nom={nom} setNom={setNom} />
       } else {
-        RescriptReactRouter.replace("/")
+        <Redirect to_="/connexion" nom={nom} setNom={setNom} />
+      }
+    // Route "/connexion" → page de connexion
+    | list{"connexion"} => <Page_connexion nom={nom} setNom={setNom} />
+    // Toute autre route → redirige vers /connexion
+    | _ => {
+        RescriptReactRouter.replace("/connexion")
         <Page_connexion nom={nom} setNom={setNom} />
       }
-    // Toute autre route → page de connexion
-    | _ => <Page_connexion nom={nom} setNom={setNom} />
     }
   }
 }

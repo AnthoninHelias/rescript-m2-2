@@ -12,23 +12,19 @@ let make = (~nom: string, ~setNom: (string => string) => unit) => {
       <h1 className="large-title"> {React.string("Page d'accueil")} </h1>
     </header>
     <div className="div-2">
-      <img className="image-1" src="image-2.png" alt="Image d'accueil" />
+      <img className="image-1" src="image-1.png" alt="Image d'accueil" />
       <p className="paragraph-1"> {React.string("Bienvenue sur votre questionnaire")} </p>
       <input
         className="input-1"
         type_="text"
         placeholder="Entrez votre nom"
         value={nom}
-        onChange={e => {
-          // Lit la valeur tapée dans le champ texte
-          let value = (e->ReactEvent.Form.target)["value"]
-          setNom(_ => value)
-        }}
+        onChange={e => Hooks.handleInputChange(setNom, e)}
       />
       <button
         className="button-1"
         // Redirige vers la page du questionnaire
-        onClick={_ => RescriptReactRouter.push("/affichage-bdd")}
+        onClick={_ => RescriptReactRouter.push("/questions")}
       >
         {React.string("Commencer le questionnaire")}
       </button>

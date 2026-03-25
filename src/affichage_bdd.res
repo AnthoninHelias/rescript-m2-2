@@ -10,63 +10,23 @@
 //   ~setNom     : fonction pour modifier le nom
 @react.component
 let make = (~questionId: int, ~nom: string, ~setNom: (string => string) => unit) => {
-  // Identifiant de la question actuellement affichée (ID côté API)
-  let (currentQuestionId, setCurrentQuestionId) = React.useState(() => questionId)
-  // Passe à true quand on a répondu à toutes les questions
-  let (isFinished, setIsFinished) = React.useState(() => false)
-
-  // Texte de la question courante (None pendant le chargement)
-  let (questionTitle, setQuestionTitle) = React.useState(() => None)
-  // Réponses proposées pour la question courante
-  let (responses, setResponses) = React.useState(() => [])
-
   // Vrai si l'utilisateur a déjà saisi un nom non vide
   let (isStarted, setIsStarted) = React.useState(() => nom->String.trim !== "")
 
-  // Nombre total de questions pour cette session (tiré aléatoirement entre 3 et 5)
-  let (totalQuestions, _) = React.useState(() => 3 + Js.Math.floor_int(Math.random() *. 3.0))
-  // Numéro de la question en cours (1-basé, affiché à l'utilisateur)
-  let (questionNumber, setQuestionNumber) = React.useState(() => 1)
+  // Hook personnalisé : navigation du quiz (ID courant, numéro, total, fin, handler)
+  let {currentQuestionId, questionNumber, totalQuestions, isFinished, handleResponseClick} =
+    Hooks.useQuiz(~startId=questionId)
 
-  // Effet lancé à chaque changement de question :
-  // appelle l'API pour récupérer le titre et les réponses
+  // Hook personnalisé : charge la question et ses réponses, avec cleanup anti-fuite
+  let {title: questionTitle, responses, notFound} = Hooks.useQuestion(currentQuestionId)
+
+  // Quand l'API ne trouve plus de question à cet ID → forcer la fin du quiz
   React.useEffect(() => {
-    let loadData = async () => {
-      let title = await Connection_bdd.fetchQuestionById(currentQuestionId)
-
-      switch title {
-      | Some(t) => {
-          // Question trouvée : mise à jour du titre et chargement des réponses
-          setQuestionTitle(_ => Some(t))
-          let reponses = await Connection_bdd.fetchResponsesByQuestionId(currentQuestionId)
-          setResponses(_ => reponses)
-        }
-      | None =>
-        // Aucune question à cet ID → le questionnaire est terminé
-        setIsFinished(_ => true)
-      }
+    if notFound {
+      handleResponseClick()
     }
-
-    // On ignore la promesse retournée (async fire-and-forget dans l'effet)
-    let _ = loadData()
-    None // Pas de fonction de nettoyage (cleanup)
-  }, [currentQuestionId])
-
-  // Appelée quand l'utilisateur clique sur une réponse :
-  // si c'était la dernière question → fin, sinon avance à la suivante
-  // Note : le champ "correct" est disponible mais le score n'est pas encore calculé
-  let handleResponseClick = () => {
-    if questionNumber >= totalQuestions {
-      // Toutes les questions ont été répondues
-      setIsFinished(_ => true)
-    } else {
-      setCurrentQuestionId(prev => prev + 1)
-      setQuestionNumber(prev => prev + 1)
-      // Réinitialise la question et les réponses le temps du chargement
-      setQuestionTitle(_ => None)
-      setResponses(_ => [])
-    }
-  }
+    None
+  }, (notFound, handleResponseClick))
 
   // ─── Rendu conditionnel selon l'état ────────────────────────────────────
   if !isStarted {
@@ -89,11 +49,7 @@ let make = (~questionId: int, ~nom: string, ~setNom: (string => string) => unit)
         type_="text"
         placeholder="Votre nom"
         value={nom}
-        onChange={e => {
-          // Lit la valeur saisie dans le champ texte
-          let value = (e->ReactEvent.Form.target)["value"]
-          setNom(_ => value)
-        }}
+        onChange={e => Hooks.handleInputChange(setNom, e)}
       />
       <button
         className="px-8 py-2 bg-violet-500 hover:bg-violet-600 text-white font-semibold rounded-lg transition-colors shadow-lg"
